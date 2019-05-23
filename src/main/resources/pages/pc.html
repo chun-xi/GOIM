@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IM</title>
+    <link rel="stylesheet" href="/static/css/layui.css" media="all">
+</head>
+<body>
+<script src="/static/layui.js"></script>
+<script>
+    var socket = new WebSocket("ws://127.0.0.1:9326/?userId=#(session.user.id)");
+    layui.use('layim', function (layim) {
+        //基础配置
+        layim.config({
+            init: {
+                mine: {
+                    "username": "#(session.user.user_name)"
+                    , "id": "#(session.user.id)"
+                    , "avatar": "#(session.user.user_avatar)"
+                    , "sign": "#(session.user.user_sign)"
+                }
+                , "friend": #(friend)
+                , "group": #(group)
+            }
+            , members: {
+                url: '/getMembers'
+                , type: 'post'
+                , data: {}
+            }
+            , uploadImage: {
+                url: '/uploadImg'
+                , type: 'post'
+            }
+            , notice: true
+            , copyright: true
+            , chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
+        });
+        socket.onerror = function(e){
+            layer.msg("连接错误"+e);
+        };
+        socket.onclose = function(){
+            window.location.reload();
+        };
+        socket.onmessage = function(res){
+            var json=JSON.parse(res.data);;
+            if(json.msgtype == 'message'){
+                var data=JSON.parse(res.data);
+                layim.getMessage(JSON.parse(res.data));
+            } else if(json.msgtype=="add"){
+            	var data=JSON.parse(res.data);
+                layim.addList(res.data);
+            	layer.msg("你有新的动态!",{icon:1});
+            }else if(json.msgtype == 'friendState'){
+            	var data=JSON.parse(res.data);
+            	layim.setFriendStatus(data.id,(data.state==1?"online":"offline")); 
+            	console.log("你的好友:"+data.name+(data.state==1?"上线啦!":"下线啦!"));
+            }
+        };
+        layim.on('sendMessage', function(res){
+            var mine = res.mine;
+            var to = res.to;
+            socket.send(JSON.stringify({
+                type: 'message'
+                ,data: res
+            }));
+        });
+    });
+</script>
+</body>
+</html>

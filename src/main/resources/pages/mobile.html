@@ -1,0 +1,295 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+    <title>IM</title>
+    <link rel="stylesheet" href="/static/css/layui.mobile.css?v=1.0">
+
+    <script src="/static/js/jquery-3.2.1.min.js?v=1.0"></script>
+    <script src="/static/layui.js?v=1.0"></script>
+    <script src="/static/js/im.js?v=1.0"></script>
+
+    <style>
+        html{background-color: #333;}
+        .layui-btn{
+			display: inline-block;
+		    height: 38px;
+		    line-height: 38px;
+		    padding: 0 18px;
+		    background-color: #009688;
+		    color: #fff;
+		    white-space: nowrap;
+		    text-align: center;
+		    font-size: 14px;
+		    border: none;
+		    border-radius: 2px;
+		    cursor: pointer;
+        }
+        .layui-btn-sm{
+			height: 30px;
+			line-height: 30px;
+			padding: 0 10px;
+			font-size: 12px;
+        }
+        .layui-btn-danger {
+		    background-color: #FF5722;
+		}
+    </style>
+</head>
+<body>
+
+<script>
+
+var layer=null; //消息弹框
+var mobile = null;
+var layim = null;
+layui.use("layer",function(){
+    layer=layui.layer;
+});
+
+    var socket = new WebSocket("ws://127.0.0.1:9326/?userId=#(session.user.id)");
+    layui.use('mobile', function(){
+        mobile = layui.mobile
+        layim = mobile.layim;
+        //基础配置
+        layim.config({
+            init: {
+                mine: {
+                    "username": "#(session.user.user_name)" //我的昵称
+                    ,"id": "#(session.user.id)" //我的ID
+                    ,"avatar": "#(session.user.user_avatar)" //我的头像
+                    ,"sign": "#(session.user.user_sign)"
+                }
+                ,"friend": #(friend)
+                ,"group": #(group)
+
+            } ,uploadImage: {
+                url: '/uploadImg'
+            }
+            , moreList: [{
+                    alias: 'user'
+                    ,title: '#(session.user.user_name)'
+                    ,iconUnicode: '&#xe66f;' //图标字体的unicode，可不填
+                  //  ,iconClass:"layui-icon-user"
+                },{
+                alias: 'phone'
+                ,title: '#(session.user.user_phone)'
+                ,iconUnicode: '&#xe678;' //图标字体的unicode，可不填
+              //  ,iconClass:"layui-icon-user"
+            },{
+                alias: 'set'
+                ,title: '个人设置'
+                ,iconUnicode: '&#xe614;' //图标字体的unicode，可不填
+              //  ,iconClass:"layui-icon-user"
+            },{
+                alias: 'reload'
+                ,title: '刷新'
+                ,iconUnicode: '&#xe9aa;' //图标字体的unicode，可不填
+            }]
+            ,about:[]
+
+            //可同时配置多个
+            ,tool: [{
+                alias: 'chatLog' //工具别名
+                ,title: '聊天记录' //工具名称
+                ,iconUnicode: '&#xe60e;' //图标字体的unicode，可不填
+                ,iconClass: '' //图标字体的class类名
+            }]
+            ,isNewFriend:true
+            ,tabIndex: 1 
+            ,isgroup: true //是否开启“群聊”
+            ,notice :true  //外部通知
+            ,chatTitleColor: '#537df4' //顶部Bar颜色
+           // ,title: '幸运聊' //应用名，默认：我的IM
+            ,brief: false //是否简约模式（如果true则不显示主面板）
+            ,copyright:true
+        });
+
+
+        //连接成功时触发
+        socket.onopen = function(){
+        //    layer.msg("连接成功");                                    c
+
+        };
+        //监听查看更多记录
+
+        //监听自定义工具栏点击，以添加代码为例
+        layim.on('tool(chatLog)', function(insert,res,obj,dd,ss){
+        	$.post("/getMessageLog",{id:obj.data.id,type:obj.data.type},function(res){
+        	var html = "";
+        	html += "<div class='layim-chat-main' style='position: relative;top: 26px;' >";
+        	html += "<ul><li class='layim-chat-system'><span>只能查询最近一百条记录</sapn></li>";
+        	var time = '';
+        		var data = res.data;
+        		if(data.code == 1){
+        			layer.msg(data.msg);
+        			return;
+        		}
+        		for(var i = 0; i < data.length; i++){
+        			if(time == ''){
+                        time=data[i].timestamp
+                       
+                    }else if((data[i].timestamp-time)>60){
+                    	html +="<li class='layim-chat-system'>";
+                    	html +='<span>'+getLocalTime(data[i].timestamp)+'</sapn></li>';
+                    }
+        			if(data[i].id == layim.cache().mine.id){
+        				html += "<li class='layim-chat-li layim-chat-mine'>";
+        				html += "<div class='layim-chat-user'><img src='"+data[i].avatar+"'><cite>"+data[i].username+"</cite></div>";
+        				html += "<div class='layim-chat-text'>"+layim.content(data[i].content)+"</div>";
+        				html += "</li>"
+        			}else{
+        				html += "<li class='layim-chat-li'>";
+        				html += "<div class='layim-chat-user'><img src='"+data[i].avatar+"'><cite>"+data[i].username+"</cite></div>";
+        				html += "<div class='layim-chat-text'>"+layim.content(data[i].content)+"</div>";
+        				html += "</li>"
+        			}
+        		}
+        	html += "</ul></div>"
+            layim.panel({
+                title: '与 '+ obj.data.id +' 的聊天记录' //标题
+                ,tpl: html //模版
+                ,data: {}
+            }); 
+        	});
+        });
+        socket.onerror = function(e){
+            layer.msg("连接错误"+e);
+        };
+        socket.onclose = function(){
+            window.location.reload();
+        };
+        //监听收到的消息
+        socket.onmessage = function(res){
+            var json=JSON.parse(res.data);;
+            if(json.msgtype == 'message'){
+                var data=JSON.parse(res.data);
+                layim.getMessage(JSON.parse(res.data)); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
+            } else if(json.msgtype=="add"){
+            	var data=JSON.parse(res.data);
+            	console.log(data);
+                layim.addList(res.data);
+            	layer.msg("你有新的动态!",{icon:1});
+            	 setTimeout(() => {
+					window.location.reload();
+				}, 2000); 
+            }else if(json.msgtype == 'friendState'){
+            	var data=JSON.parse(res.data);
+            	layim.setFriendStatus(data.id,(data.state==1?"online":"offline")); 
+            	console.log("你的好友:"+data.name+(data.state==1?"上线啦!":"下线啦!"));
+            }
+        };
+        layim.on('sendMessage', function(res){
+            var mine = res.mine; //包含我发送的消息及我的信息
+            var to = res.to; //对方的信息
+            socket.send(JSON.stringify({
+                type: 'message' //随便定义，用于在服务端区分消息类型
+                ,data: res
+            }));
+        });
+        //群右上角
+        //查看聊天信息
+        layim.on('detail', function(data){
+        	console.log(data);
+        	if(data.type=="group"){
+        		$.get('/groupDetail', {groupId: data.id}, function(res){
+            		if(res.state==0){
+            			layer.msg(res.msg);
+            			return;
+            		}
+    	        	var html ="";
+            	    for(var i =0;i<res.users.length;i++){
+            	    	html+='<li><img src="'+res.users[i].user_avatar+'"><span>'+res.users[i].user_name+'</span><p>签名:'+res.users[i].user_sign+'</p><div class="layui-btn-group" style="position: absolute;right: 10px;top:5px;"><button onclick="delGroupUser('+res.users[i].id+','+data.id+',this)" class="layui-btn layui-btn-sm layui-btn-danger" style="font-size: 10px;">删除</button></div></li>';
+            	    }
+            	    var tool='<div class="layui-layim-list"><li style="height:50px;margin-top:2px;"><div><img src="'+res.group.group_avatar+'"><span>'+res.group.group_name+'</span><p>'+res.group.group_sign+'</p></div></li><div class="layui-btn-group" style="position: absolute;right:10px;top:5px;"><button class="layui-btn layui-btn-sm layui-btn-danger" onclick="setGroupStatus('+res.group.group_status+','+data.id+',this)" style="font-size: 10px;">'+(res.group.group_status==1?'禁言':'开启')+'</button></div></div>';
+            	    var div=tool+'<div class="layui-layim-list" style="background: #fff; margin-top: 0px;">'+html+'</div>';
+            	    //弹出面板
+            	    layim.panel({
+            	      title: data.name + '群信息' //标题
+            	      ,tpl: div
+            	    });
+            	});
+        	}else{
+        		var html='';
+                html += '<div class="layui-layim-list" >';
+                html += '<li style="height:50px;margin-top:10px;"><div><img src="' + data.avatar + '" /><span>' + data.username + '</span><p>' + data.sign + '</p></div></li>';
+                html += "<button onclick='delUser("+data.id+",this)' class='layui-btn layui-btn-danger' style='width:100%'>删除该好友</button>";
+                html += '</div>';
+             
+	            layim.panel({
+	                title:'好友设置'
+	                ,tpl:html,
+	            });
+        	}
+        });
+        //监听点击“新的朋友”
+        layim.on('newFriend', function(){
+            layer.open({
+                type: 2
+                ,id:'addUser'
+                ,closeBtn: 0
+                ,title:false
+                ,area: ['100%', '100%']
+                ,content: '/newFriend.html' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+            });
+        });
+        //监听返回
+        layim.on('back', function(){
+            //比如返回到上一页面（而不是界面）：
+           // location.href = '/user/index.html';
+
+            //或者做一些其他的事
+        });
+        //监听点击更多列表
+        layim.on('moreList', function(obj){
+            switch(obj.alias){ //alias即为上述配置对应的alias
+                case 'find': //发现
+                    layer.msg('好友动态升级中');
+                    break;
+                case 'reload':
+                    window.location.reload();
+                    break;
+                case 'set':
+                    layer.open({
+                        type: 2
+
+                        ,closeBtn: 0
+                        ,title:false
+                        ,area: ['100%', '100%']
+                        ,content: '/info' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    });
+                    break;
+                case 'exit':
+                    window.location.href="/exit.html";
+                    break;
+            }
+        });
+    });
+//关闭窗口并且刷新
+function closeWindow(index){
+    layer.close(index);
+    window.location.reload();
+}
+
+function getLocalTime(nS){
+    return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " "); 
+}
+//关闭窗口并且创建新的聊天
+function closeWindowAndChat(index,id,name,headImg){
+    layer.close(index);
+    layim.chat({
+        id: id
+        ,name: name
+        ,type: 'friend' //friend、group等字符，如果是group，则创建的是群聊
+        ,avatar: headImg
+    });
+    $(".layui-layer-move").remove();
+
+}
+
+</script>
+</body>
+</html>

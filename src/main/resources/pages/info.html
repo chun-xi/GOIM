@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" href="/static/chat/css/info.css?v=1.0"/>
+    <link rel="stylesheet" href="/static/chat/font/font_return/iconfont.css">
+    <link rel="stylesheet" href="/static/chat/font/font_skip/iconfont.css">
+
+    <link rel="stylesheet" href="/static/css/layui.css">
+
+
+
+    <title>个人资料</title>
+</head>
+<body>
+<div class="box">
+
+    <div class="top">
+        <div class="top_page">
+            <span onclick="closeWindow()" class="top_icon iconfont icon-fanhui" style="font-size: 24px;"></span>
+            <span class="top_text">个人资料</span>
+        </div>
+    </div>
+
+    <div class="center">
+        <div class="center_page">
+            <div class="center_p center_user">
+                <span class="user_label">帐号</span>
+                <span class="user_content">#(user.id)</span>
+            </div>
+            <div class="center_p center_user" onclick="$('#file').click()">
+                <span class="user_label">头像</span>
+                <span class="user_content" style="right: 6%;"><img src="#(user.user_avatar)" class="user_head_p"/></span>
+                <span class="user_skip iconfont icon-tiaozhuan"></span>
+            </div>
+            <div class="center_p center_nick" onclick="edit_info('user_name',this)">
+                <span class="user_label">昵称</span>
+                <span class="user_content">#(user.user_name)</span>
+                <span class="user_skip iconfont icon-tiaozhuan"></span>
+            </div>
+            <div class="center_p center_ana" onclick="edit_info('user_sign',this)">
+                <span class="user_label">签名</span>
+                <span class="user_content">#(user.user_sign)</span>
+                <span class="user_skip iconfont icon-tiaozhuan"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom" >
+        <span class="bottom_del" onclick="window.location.href='/user/exit.html';">退出登录</span>
+        <!--<span class="bottom_inform">资料修改请合法修改</span>-->
+    </div>
+
+    <form id="update_form">
+        <input type="hidden" id="up_key">
+    </form>
+    <form id="update_img" style="display: none">
+        <input type="file" id="file" name="file" onchange="uploadImg()">
+    </form>
+</div>
+</body>
+</html>
+
+
+
+<script src="/static/js/jquery-3.2.1.min.js?v=1.0"></script>
+<script src="/static/layui.js?v=1.0"></script>
+<script src="/static/js/recorder/recorder.js"></script>
+
+<script type="text/javascript">
+    var layer=null;
+    var update=false;
+    layui.use('layer', function(){
+        layer = layui.layer;
+
+    });
+    function edit_info(key,obj){
+
+       $("#up_key").attr("name",key);
+        layer.prompt({
+            formType: 2,
+            value: $(obj).find(".user_content").html(),
+            title: '请输入值'
+
+        }, function(value, index, elem){
+            if(key=="sex"){
+                value= value=="男"?1:value;
+                value=  value=="女"?0:value;
+            }
+            if(key=="userWork"){
+                if(value.length>16){
+                    layer.msg("不能超过十六个字符");
+                    return;
+                }
+            }
+
+            //得到value
+            //异步修改数据
+            $("#up_key").val(value);
+          var data=$("#update_form").serializeArray();
+
+            $.ajax({
+                url:'/updateUser',
+                data:data,
+                type:'post',
+                dataType:'json',
+                success:function(opResult){
+                    if(opResult.status==1){
+                        update=true;
+                        //反转义
+                        $(obj).find(".user_content").html(value);
+                        layer.msg(opResult.msg);
+                        layer.close(index);
+                    }else{
+                        layer.msg(opResult.msg);
+                        layer.close(index);
+                    }
+                }
+            });
+
+        });
+    }
+    //头像上传
+    function uploadImg(){
+        var formData = new FormData($( "#update_img" )[0]);
+        formData.append("type","head");
+        $.ajax({
+            url:'/uploadImg',
+            data: formData,
+            type:'post',
+            dataType:'json',
+            processData : false,  //必须false才会避开jQuery对 formdata 的默认处理
+            contentType : false,  //必须false才会自动加上正确的Content-Type
+            success:function(opResult){
+                $(".user_head_p").attr("src",opResult.data.src) ;
+                layer.msg(opResult.msg);
+                layer.close(index);
+
+            },
+            error:function (){
+                layer.msg("错误！");
+            }
+        });
+    }
+
+    function closeWindow(){
+        // window.location.href="/";
+
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        //修改过资料 关闭需要刷新
+        if(update){
+            parent.closeWindow(index) ;
+        }else{
+            parent.layer.close(index); //再执行关闭
+        }
+
+    }
+
+
+
+
+    //获取地址栏参数//可以是中文参数
+    function getUrlParam(key) {
+        // 获取参数
+        var url = window.location.search;
+        // 正则筛选地址栏
+        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        // 匹配目标参数
+        var result = url.substr(1).match(reg);
+        //返回参数值
+        return result ? decodeURIComponent(result[2]) : null;
+    }
+</script>
+</html>

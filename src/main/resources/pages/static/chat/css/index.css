@@ -1,0 +1,151 @@
+/*#36373C*/
+html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img {
+    margin: 0;
+    padding: 0;
+}
+html{
+	font-family: 'Helvetica Neue','PingFang SC',STHeitiSC-Light,Helvetica,Arial,sans-serif;;
+	background-color: #EEEEEE;
+}
+
+.seek_box{
+	width: 100%;
+	position: relative;
+}
+.seek_top{
+	width: 100%;
+	height: 50px;
+	background-color: #537df4;
+	color: white;
+	position: relative;
+}
+.top_icon{
+	display: inline-block;
+	line-height: 50px;
+	padding: 0 15px 0 25px;
+	position: absolute;
+	cursor: pointer;
+}
+.top_text{
+	display: inline-block;
+	line-height: 50px;
+	font-size: 18px;
+	margin-left: 70px;
+}
+.seek_find{
+	width: 100%;
+	margin-top: 10px;
+}
+.find_box{
+	width: 100%;
+	height: 30px;
+}
+.box_text{
+	display: inline-block;
+	background: white;
+	border-radius: 5px;
+	width: 100%;
+	position: relative;
+}
+.box_text .glass{
+	position: absolute;
+	line-height: 30px;
+	margin-left: 10px;
+}
+.box_text .find_content{
+	outline-style: none;
+	width: 80%;
+	padding-left: 40px;
+	padding-right: 5%;
+	border: none;
+	height: 30px;	
+}
+.box_text .chahao{
+	display: none;
+	position: absolute;
+	right: 0;
+	line-height: 30px;
+	opacity: 0.8;
+	font-size: 18px;
+	margin-right: 5px;
+	color: red;
+	cursor: pointer;	
+}
+.search{
+	display: block;
+	background-color: #537df4;
+	cursor: pointer;
+	color: white;
+	font-size: 18px;
+	height: 40px;
+	letter-spacing: 30px;
+	text-align: center;
+	line-height: 40px;
+	width: 100%;
+	text-indent: 2em;
+	margin-top: 10px;
+
+}
+.seek_label{
+	width: 100%;
+	height: 30px;
+	position: relative;
+
+}
+.label_result{
+	width: 100%;
+	height: 30px;
+	text-align: center;
+	display: inline-block;
+	font-size: 14px;
+	margin-top: 8px;
+	color: #c3c3c3;
+}
+.seek_content{
+	width: 100%;
+	margin-top: 8px;
+}
+.user_box{
+	height: 40px;
+	padding: 15px 0;
+	border-bottom: 1px solid #aaa7a7;
+	position: relative;
+	background: white;
+	box-shadow: 0 0 1px #d8d8d8;
+	margin-top: 2px;
+}
+.user_head{
+	border-radius: 50%;
+	width: 40px;
+	margin-left: 3%;
+    height: 40px;
+}
+.user_name{
+	position: absolute;
+	display: inline-block;
+	margin: -3px 0 0 10px;
+	font-size: 17px;
+}
+.user_ana{
+	display: inline-block;
+	position: absolute;
+	width: 60%;
+	font-size: 12px;
+	margin: 25px 0 5px 10px;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color: #929292;
+}
+.user_add{
+	display: inline-block;
+	position: absolute;
+	right: 5px;
+	border: 1px solid #adadad;
+	padding: 5px 12px;
+	border-radius: 3px;
+	font-size: 14px;
+	height: 20px;
+	line-height: 20px;
+	margin-top: 4px;
+}

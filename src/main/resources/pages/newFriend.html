@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" href="/static/chat/css/index.css"/>
+    <link rel="stylesheet" href="/static/chat/font/font_return/iconfont.css">
+    <link rel="stylesheet" href="/static/chat/font/font_glass/iconfont.css">
+    <link rel="stylesheet" href="/static/chat/font/font_x/iconfont.css">
+    <script src="/static/chat/js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/chat/js/index.js?v1=1" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/static/css/layui.css">
+    <script src="/static/js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/layui.js?v=21" type="text/javascript" charset="utf-8"></script>
+    <title>查找好友</title>
+</head>
+<body>
+<div class='seek_box'>
+
+    <div class="seek_top">
+        <span onclick="closeWindow()" class="top_icon iconfont icon-fanhui" style="font-size: 24px;"></span>
+        <span  class="top_text">查找添加</span>
+    </div>
+
+    <div class="seek_find">
+        <div class="find_box">
+            <div class="box_text">
+                <span class="glass iconfont icon-ai219"></span>
+                <input type="text" class="find_content"  placeholder='账号/昵称/手机号/群号' id="find_text"/>
+                <span class="chahao iconfont icon-chahao" id="find_clear"></span>
+            </div>
+
+        </div>
+        <span  class="search" id="find_search">搜索好友</span>
+        <span  class="search" id="find_search_group">搜索群组</span>
+    </div>
+
+    <div class="seek_label">
+        <span class="label_result">————搜索结果————</span>
+        <div class="users"></div>
+    </div>
+
+
+</div>
+</body>
+</html>
+
+
+<script type="text/javascript">
+    var layer=null;
+    var update=false;
+    layui.use('layer', function(){
+        layer = layui.layer;
+    });
+    //添加
+    function add_user(id,obj){
+       // var obj=$(this);
+        //实际使用时数据由动态获得
+        $.ajax({
+            url:'/addFriend',
+            data:{friendId:id},
+            type:'post',
+            dataType:'json',
+            success:function(opResult){
+                if(opResult.state=="ok"){
+                    update=true;
+                    $(obj).html("已添加");
+                    $(obj).css("border","0");
+                }else{
+                    layer.msg(opResult.msg);
+                }
+            }
+        });
+    }
+    
+  //添加
+    function add_group(id,obj){
+       // var obj=$(this);
+        //实际使用时数据由动态获得
+        $.ajax({
+            url:'/addGroup',
+            data:{groupId:id},
+            type:'post',
+            dataType:'json',
+            success:function(opResult){
+                if(opResult.state=="ok"){
+                    update=true;
+                    $(obj).html("已添加");
+
+                    $(obj).css("border","0");
+                }else{
+                    layer.msg(opResult.msg);
+                }
+            }
+        });
+    }
+
+    function closeWindow(){
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        //修改过资料 关闭需要刷新
+        if(update){
+            parent.closeWindow(index) ;
+        }else{
+            parent.layer.close(index); //再执行关闭
+        }
+    }
+
+
+
+
+    //获取地址栏参数//可以是中文参数
+    function getUrlParam(key) {
+        // 获取参数
+        var url = window.location.search;
+        // 正则筛选地址栏
+        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        // 匹配目标参数
+        var result = url.substr(1).match(reg);
+        //返回参数值
+        return result ? decodeURIComponent(result[2]) : null;
+    }
+</script>
+</html>

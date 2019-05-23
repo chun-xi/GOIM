@@ -1,0 +1,155 @@
+html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img {
+    margin: 0;
+    padding: 0;
+}
+html{
+	font-family: 'Helvetica Neue','PingFang SC',STHeitiSC-Light,Helvetica,Arial,sans-serif;;
+	background-color: #EEEEEE;
+}
+/*top*/
+.box{
+	width: 100%;
+	position: relative;
+}
+.top{
+	width: 100%;
+	position: relative;
+}
+.top_page{
+	width: 100%;
+	height: 50px;
+	background-color: rgba(0,0,0,0,);
+	color: white;
+	position: relative;
+	z-index: 2;
+}
+.top_icon{
+	display: inline-block;
+	line-height: 50px;
+	padding: 0 15px 0 25px;
+	position: absolute;
+	cursor: pointer;
+}
+.top_text{
+	display: inline-block;
+	line-height: 50px;
+	font-size: 18px;
+	margin-left: 70px;
+}
+
+.top_bg{
+	display: block;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+	width: 100%;
+}
+.top_bg img{
+	width: 100%;
+	height: 220px;
+}
+/*top*/
+/*center*/
+.center{
+	width: 100%;
+	margin-top: 170px;
+	background: white;
+}
+.center .center_top{
+	background: white;
+	text-align: center;
+}
+.center_top_head{
+	border-radius: 50%;
+	width: 150px;
+	height: 150px;
+	z-index: 3;
+	display: inline-block;
+	position: absolute;
+	top: 110px;
+	background: white;
+	text-align: center;
+	left: 50%;
+	margin-left: -75px;
+}
+.center_top_head img{
+	border-radius: 50%;
+	line-height: 160px;
+	width: 140px;
+	height: 140px;
+	margin-top: 5px;
+}
+.center_top_nick{
+	font-size: 28px;
+	padding-top: 45px;
+}
+.center_top_ana{
+	color: #a7a8aa;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	height: 30px;
+	line-height: 30px;
+}
+.center_top_ana .icon-tiaozhuan{
+	font-size: 12px;
+	margin-left: 5px;
+	display: inline-block;
+	position: absolute;
+	margin-bottom: 9px;
+	line-height: 30px;
+	height: 30px;
+		
+}
+.center_bottom{
+	width: 100%;
+}
+.bottom_id_icon{
+	display: inline-block;
+	margin:0 20px;
+	width: 20px;
+}
+.center_bottom_p{
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 1px solid #dcdedd;
+}
+.bottom_icon_tiaozhuan{
+	position: absolute;
+	right: 10px;
+}
+.center_bottom_content{
+	display: inline-block;
+	letter-spacing:1px;
+	font-size: 16px;
+}
+/*center*/
+/*bottom*/
+.bottom{
+	width: 100%;	
+}
+.l_btn_bottom{
+	width: 40%;
+	background: white;
+	color: black;
+	display: inline-block;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	margin-top: 10px;
+	margin-left: 5%;
+	border-radius: 2px;
+}
+.r_btn_bottom{
+	width: 40%;
+	background: #18b9ef;
+	color: white;
+	display: inline-block;
+	position: absolute;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 2px;
+	text-align: center;
+	margin-top: 10px;
+	right: 5%;
+}

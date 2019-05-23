@@ -1,0 +1,117 @@
+html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img {
+    margin: 0;
+    padding: 0;
+}
+html{
+	font-family: 'Helvetica Neue','PingFang SC',STHeitiSC-Light,Helvetica,Arial,sans-serif;;
+	background-color: #EEEEEE;
+}
+/*top*/
+.box{
+	width: 100%;
+	position: relative;
+}
+.top_page{
+	width: 100%;
+	height: 50px;
+	background-color: #537df4;
+	color: white;
+	position: relative;
+}
+.top_icon{
+	display: inline-block;
+	line-height: 50px;
+	padding: 0 15px 0 25px;
+	position: absolute;
+	cursor: pointer;
+}
+.top_text{
+	display: inline-block;
+	line-height: 50px;
+	font-size: 18px;
+	margin-left: 70px;
+}
+/*top*/
+/*center*/
+
+.center,.center_page{
+	width: 100%;
+	position: relative;
+	margin-top: 15px;
+}
+.center_p{
+	width: 100%;
+	background: white;
+	height: 50px;
+	border-bottom: 1px solid #dcdedd;
+}
+
+.center_page .user_label,.center_page .user_content,.user_skip{
+	position: absolute;
+	display: inline-block;
+}
+
+.center_page .user_label{
+	line-height: 50px;
+	margin-left: 3%;
+}
+.center_page .user_content{
+	line-height: 50px;
+	right: 6%;
+	font-size: 14px;
+	color: #797979;
+}
+.center_page .user_skip{
+	right: 1%;
+	line-height: 50px;
+	font-size: 16px;
+	color: #605e5e;
+}
+.center_user{
+	border-top: 1px solid #dcdedd;
+}
+.center_user .user_content{
+	right: 3%;
+}
+
+.user_head_p{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+
+}
+.center_ana .user_content{
+	width: 70%;
+	height: 50px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	right: 3%;
+}
+/*center*/
+/*bottom*/
+.bottom{
+	width: 100%;
+	margin-top: 20px;
+}
+.bottom .bottom_del{
+	width: 90%;
+	height: 40px;
+	background: #f96154;
+	color: white;
+	border-radius: 3px;
+	display: block;
+	text-align: center;
+	line-height: 40px;
+	margin-left: 5%;
+}
+.bottom .bottom_inform{
+	width: 100%;
+	height: 30px;
+	display: block;
+	text-align: center;
+	margin-top: 8px;
+	font-size: 14px;
+	color: #308bc2;
+}
+/*bottom*/

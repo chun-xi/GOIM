@@ -1,0 +1,86 @@
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes"/>
+    <title>我的IM</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/css/home.css" rel="stylesheet" type="text/css"/>
+    <link href="http://at.alicdn.com/t/font_6yxmrwgmg7kl0udi.css" rel="stylesheet" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+    <style type="text/css">
+        .tb960x90 {display:none!important;display:none}
+        .biao {height: 3.414em;line-height: 3.414em;}
+        .biao span{width:8%;display: -webkit-inline-box;}
+        .biao span img{width:100%;}
+    </style>
+</head>
+<body style="background:#fff;">
+<!--top-->
+<div class="top_c">
+    <a href="javascript:history.back();" class="iconfont icon-jiantou-copy-copy"></a>
+    <p class="titi">
+        登录
+    </p>
+</div>
+<div class="login">
+    <form id="form-login" >
+    <div class="container">
+        <img src="/static/imgs/logo.png">
+        <div class="ru">
+            <span class="iconfont icon-shouji"></span>
+            <input type="text" name="username" id="username" size="60" maxlength="60" style="color:#ccc" value="" placeholder="请输入手机号">
+        </div>
+        <div class="ru">
+            <span class="iconfont icon-mima"></span>
+            <input type="password" name="password"  id="password" size="60" maxlength="60" style="color:#ccc" value="" placeholder="请输入登录密码">
+        </div>
+        <a href="javascript:userLogin()" class="deng">登 录</a>
+        <a href="/register.html" class="wang" style="text-align:center;">免费注册</a>
+    </div>
+    </form>
+</div>
+<script type="text/javascript">
+    document.onkeydown = function (event){
+        if (event.keyCode == "13") {
+            //回车执行查询
+            userLogin()  ;
+        }
+    }
+    function userLogin(){
+
+        var data=$("#form-login").serializeArray();
+        $.ajax({
+            url:'/login',
+            data:data,
+            type:'post',
+            dataType:'json',
+            success:function(ret){
+                if(ret.state=="ok"){
+                    repwd();
+                    window.location.href="/index" ;
+                }else{
+                    alert(ret.msg);
+                }
+            } 
+        });
+    }
+</script>
+<script src="/static/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="/static/js/jquery.cookie.js"></script>
+<script>
+    function repwd(){
+
+            //记住密码
+            $.cookie('ble_cookie_username', $("#username").val(), { expires: 7 });
+            $.cookie('ble_cookie_password', $("#password").val(), { expires: 7 });
+
+    }
+    $(function(){
+        //加载记住的密码
+        $("#username").val($.cookie('ble_cookie_username'))   ;
+        $("#password").val( $.cookie('ble_cookie_password'))     ;
+    })
+
+</script>
+</body>
+</html>
